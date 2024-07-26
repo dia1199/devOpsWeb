@@ -4,47 +4,32 @@ pipeline {
     tools {
         maven 'localMaven'
     }
-    environment {
-        fname = "Ranjit"
-        lname = "Swain"
-        version = "1.2"
-        system = "Dev"
-    }
-
-stages{
-        stage('Build'){
-            steps {
-                sh 'mvn clean package'
-            }
-            post {
-                success {
-                    echo 'Archiving the artifacts'
-                    archiveArtifacts artifacts: '**/target/*.war'
+    stages{
+            stage('Build Java Application'){
+                steps {
+                    sh 'mvn clean package'
                 }
-            }
-        }
-
-        stage ('Deployments'){
-            parallel{
-                stage ('Deploy to Staging'){
-                    steps {
-                        
-                        echo "This is made by ${env.fname} ${env.lname}"
-                        echo "it's running on ${env.system} and the version is ${env.version}"
-			deploy adapters: [tomcat7(credentialsId: 'StagingTomcatServer', path: '', url: 'http://3.110.179.112:8080/')], contextPath: null, war: '**/*.war'
+                post {
+                    success {
+                        echo 'Archiving the artifacts'
+                        archiveArtifacts artifacts: '**/target/*.war'
                     }
                 }
-
-                stage ("Deploy to Staging2"){
-                    steps {
-                        echo 'This is just a demo on Production server.'
-                        /*script{
-                            props = readProperties file: 'build.cnf'
+            }
+            stage('Deployment to Staging server'){
+                parallel{
+                    stage('Deploy to Tomcat Server1'){
+                        steps{
+                            deploy adapters: [tomcat9(credentialsId: 'tomcatcred', path: '', url: 'http://13.126.199.225:8080/')], contextPath: null, war: '**/*.war'
                         }
-                        echo "Current Version ${props['deploy.version']}"*/
+                    }
+                    stage('Deploy to Tomcat Server2'){
+                        steps{
+                            echo "Deploying to Tomcat Server 2"
+                        }
                     }
                 }
+
             }
         }
-    }
 }
