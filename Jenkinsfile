@@ -30,5 +30,15 @@ pipeline {
                     }
                 }
             }
+        stage('Deploy'){
+            steps{
+                echo "Deployment Triggered"
+            }
         }
+    }
+    post {
+        success{
+            echo "Pipeline completed successfully"
+        }
+    }
 }
