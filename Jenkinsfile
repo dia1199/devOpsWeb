@@ -24,6 +24,11 @@ pipeline {
                     echo "Executed from ${params.environ}"
                     echo "Executed by ${params.username} and password provided as ${params.PASSWORD}"
                 }
+                post {
+                    success {
+                        echo 'Post section triggered'
+                    }
+                }
             }
         }
 }
