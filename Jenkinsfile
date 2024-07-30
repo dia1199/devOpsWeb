@@ -2,34 +2,25 @@ pipeline {
     agent any
     
     tools {
+        jdk 'java8'
         maven 'localMaven'
     }
+    parameters {
+         string(name: 'environ', defaultValue: '[Dev, pre-prod, prod]', description: 'Environment List')
+    }
+    environment {
+        fname = "Ranjit"
+        lname = "Swain"
+        version = "1.2"
+        system = "Dev"
+    }
+    
     stages{
             stage('Build Java Application'){
                 steps {
-                    sh 'mvn clean package'
+                    echo "My name is ${fname}"
+                    echo "Executed from ${environ}"
                 }
-                post {
-                    success {
-                        echo 'Archiving the artifacts'
-                        archiveArtifacts artifacts: '**/target/*.war'
-                    }
-                }
-            }
-            stage('Deployment to Staging server'){
-                parallel{
-                    stage('Deploy to Tomcat Server1'){
-                        steps{
-                            deploy adapters: [tomcat9(credentialsId: 'tomcatcred', path: '', url: 'http://13.126.199.225:8080/')], contextPath: null, war: '**/*.war'
-                        }
-                    }
-                    stage('Deploy to Tomcat Server2'){
-                        steps{
-                            echo "Deploying to Tomcat Server 2"
-                        }
-                    }
-                }
-
             }
         }
 }
