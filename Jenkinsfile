@@ -6,7 +6,7 @@ pipeline {
         maven 'localMaven'
     }
     parameters {
-         string(name: 'environ', defaultValue: '[Dev, pre-prod, prod]', description: 'Environment List')
+         string(name: 'environ', defaultValue: ['Dev', 'pre-prod', 'prod'], description: 'Environment List')
     }
     environment {
         fname = "Ranjit"
@@ -19,7 +19,7 @@ pipeline {
             stage('Build Java Application'){
                 steps {
                     echo "My name is ${fname}"
-                    echo "Executed from ${params.environ}"
+                    echo "Executed from ${environ}"
                 }
             }
         }
