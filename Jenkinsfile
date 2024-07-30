@@ -19,7 +19,7 @@ pipeline {
             stage('Build Java Application'){
                 steps {
                     echo "My name is ${fname}"
-                    echo "Executed from ${environ}"
+                    echo "Executed from ${params.environ}"
                 }
             }
         }
