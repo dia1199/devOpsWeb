@@ -9,7 +9,9 @@ pipeline {
 stages{
         stage('Build'){
             steps {
-                build-demo()
+                script{
+                    build-demo()
+                }
             }
             post {
                 success {
